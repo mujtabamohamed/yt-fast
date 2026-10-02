@@ -1,4 +1,4 @@
-// YT Speed Controller — Popup Script
+// YouTube Fast — Popup Script
 
 (function () {
   'use strict';
@@ -9,9 +9,6 @@
   const currentSpeedEl = document.getElementById('current-speed');
   const statusText = document.getElementById('status-text');
 
-  // Cross-browser API
-  const api = (typeof browser !== 'undefined' && browser) || chrome;
-
   /**
    * Formats a speed number for display.
    * @param {number} speed
@@ -19,7 +16,6 @@
    */
   function formatSpeed(speed) {
     if (Number.isInteger(speed)) return speed + '×';
-    // Show up to 2 decimal places, strip trailing zeros
     return parseFloat(speed.toFixed(2)) + '×';
   }
 
@@ -43,7 +39,6 @@
 
     // Trigger bump animation
     currentSpeedEl.classList.remove('bump');
-    // Force reflow so the animation replays
     void currentSpeedEl.offsetWidth;
     currentSpeedEl.classList.add('bump');
 
@@ -61,15 +56,15 @@
    */
   async function sendToContent(message) {
     try {
-      const tabs = await api.tabs.query({ active: true, currentWindow: true });
+      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       const tab = tabs[0];
       if (!tab || !tab.url || !tab.url.includes('youtube.com')) {
         return null;
       }
-      const response = await api.tabs.sendMessage(tab.id, message);
+      const response = await chrome.tabs.sendMessage(tab.id, message);
       return response;
     } catch (err) {
-      console.warn('YT Speed: Could not reach content script.', err);
+      console.warn('YouTube Fast: Could not reach content script.', err);
       return null;
     }
   }
@@ -109,15 +104,14 @@
 
       const result = await sendToContent({ type: 'SET_SPEED', speed });
       if (!result || !result.success) {
-        // Fallback: write directly to storage so the content script picks it up
-        await api.storage.local.set({ ytfast_speed: speed });
+        await chrome.storage.local.set({ ytfast_speed: speed });
       }
     });
 
     grid.appendChild(btn);
   });
 
-  // ── Initialize: get the current speed from the content script ──────────
+  // ── Initialize ─────────────────────────────────────────────────────────
 
   document.addEventListener('DOMContentLoaded', async () => {
     const result = await sendToContent({ type: 'GET_SPEED' });
@@ -127,18 +121,15 @@
       statusText.classList.add('connected');
       setActiveButton(result.speed);
     } else {
-      // Not on a YouTube video — try reading from storage
       try {
-        const stored = await api.storage.local.get('ytfast_speed');
+        const stored = await chrome.storage.local.get('ytfast_speed');
         const savedSpeed = stored?.ytfast_speed ?? 1;
         setActiveButton(savedSpeed);
-        statusText.textContent = 'No video detected';
-        statusText.classList.add('error');
       } catch {
         setActiveButton(1);
-        statusText.textContent = 'No video detected';
-        statusText.classList.add('error');
       }
+      statusText.textContent = 'No video detected';
+      statusText.classList.add('error');
     }
   });
 })();

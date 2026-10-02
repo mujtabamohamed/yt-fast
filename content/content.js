@@ -1,5 +1,4 @@
-// YT Speed Controller — Content Script
-// Communicates with popup to get/set playback speed on YouTube videos.
+// YouTube Fast — Content Script
 
 (function () {
   'use strict';
@@ -12,11 +11,7 @@
    * @returns {HTMLVideoElement|null}
    */
   function getVideo() {
-    // Primary player
-    const primary = document.querySelector('video.html5-main-video');
-    if (primary) return primary;
-    // Fallback — any video on the page
-    return document.querySelector('video');
+    return document.querySelector('video.html5-main-video') || document.querySelector('video');
   }
 
   /**
@@ -28,13 +23,8 @@
     if (video) {
       video.playbackRate = rate;
     }
-    // Persist across navigations (YouTube is an SPA)
     try {
-      if (typeof chrome !== 'undefined' && chrome.storage) {
-        await chrome.storage.local.set({ [STORAGE_KEY]: rate });
-      } else if (typeof browser !== 'undefined' && browser.storage) {
-        await browser.storage.local.set({ [STORAGE_KEY]: rate });
-      }
+      await chrome.storage.local.set({ [STORAGE_KEY]: rate });
     } catch {
       // Storage may not be available in some edge cases
     }
@@ -45,12 +35,7 @@
    */
   async function restoreSpeed() {
     try {
-      let result;
-      if (typeof chrome !== 'undefined' && chrome.storage) {
-        result = await chrome.storage.local.get(STORAGE_KEY);
-      } else if (typeof browser !== 'undefined' && browser.storage) {
-        result = await browser.storage.local.get(STORAGE_KEY);
-      }
+      const result = await chrome.storage.local.get(STORAGE_KEY);
       const saved = result?.[STORAGE_KEY];
       if (saved != null && SPEEDS.includes(saved)) {
         const video = getVideo();
@@ -65,30 +50,26 @@
 
   // ── Listen for messages from the popup ──────────────────────────────────
 
-  const runtime = (typeof chrome !== 'undefined' && chrome.runtime) || (typeof browser !== 'undefined' && browser.runtime);
+  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message.type === 'GET_SPEED') {
+      const video = getVideo();
+      sendResponse({ speed: video ? video.playbackRate : 1 });
+      return true;
+    }
 
-  if (runtime) {
-    runtime.onMessage.addListener((message, _sender, sendResponse) => {
-      if (message.type === 'GET_SPEED') {
-        const video = getVideo();
-        sendResponse({ speed: video ? video.playbackRate : 1 });
-        return true;
+    if (message.type === 'SET_SPEED') {
+      const rate = Number(message.speed);
+      if (!isNaN(rate) && rate > 0) {
+        applySpeed(rate);
+        sendResponse({ success: true, speed: rate });
+      } else {
+        sendResponse({ success: false, error: 'Invalid speed' });
       }
+      return true;
+    }
 
-      if (message.type === 'SET_SPEED') {
-        const rate = Number(message.speed);
-        if (!isNaN(rate) && rate > 0) {
-          applySpeed(rate);
-          sendResponse({ success: true, speed: rate });
-        } else {
-          sendResponse({ success: false, error: 'Invalid speed' });
-        }
-        return true;
-      }
-
-      return false;
-    });
-  }
+    return false;
+  });
 
   // ── Auto-apply saved speed when a new video element appears ─────────────
 
@@ -102,7 +83,6 @@
     if (video && !video.dataset.ytfastBound) {
       video.dataset.ytfastBound = 'true';
       video.addEventListener('loadedmetadata', onVideoReady);
-      // Also apply immediately in case metadata already loaded
       restoreSpeed();
     }
   });

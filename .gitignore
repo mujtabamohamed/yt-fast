@@ -12,11 +12,7 @@ Thumbs.db
 *.swo
 *~
 
-# Generated (can be regenerated with generate_icons.py)
-# icons/
-
-# Misc
+# Packaged extensions
 *.zip
-*.xpi
 *.crx
 *.pem
