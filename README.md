@@ -8,7 +8,7 @@ A minimal browser extension to control YouTube video playback speed. Choose from
 
 - **15 speed presets** — 0.25×, 0.5×, 0.75×, 0.9×, 0.95×, 1×, 1.05×, 1.1×, 1.25×, 1.5×, 1.75×, 2×, 3×, 4× and 5×
 - **Speed persists** across videos and YouTube SPA navigations
-- **Works on Chrome and Firefox** (including Firefox-based browsers like Zen)
+- **Works on Chrome and Firefox**
 - **Minimal UI** — clean dark interface, zero clutter
 
 ## Installation
@@ -22,7 +22,7 @@ A minimal browser extension to control YouTube video playback speed. Choose from
 5. Select the `yt-fast` project folder (the one containing `manifest.json`)
 6. The extension icon appears in your toolbar — click it on any YouTube video
 
-### Firefox / Zen Browser
+### Firefox
 
 Firefox requires a separate manifest. Use the build script to generate it:
 
@@ -49,7 +49,7 @@ Firefox requires a separate manifest. Use the build script to generate it:
 6. Open `about:addons` → ⚙️ gear icon → **Install Add-on From File…**
 7. Select `dist/yt-speed-firefox.zip` (rename to `.xpi` first if needed)
 
-> **Note:** Disabling signature enforcement only works on Firefox Developer Edition, Firefox Nightly, Firefox ESR, and some forks like Zen. Regular Firefox does not allow it.
+> **Note:** Disabling signature enforcement only works on Firefox Developer Edition, Firefox Nightly and Firefox ESR. Regular Firefox does not allow it.
 
 #### Permanent install (signed via Mozilla)
 
