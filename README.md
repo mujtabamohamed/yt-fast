@@ -6,7 +6,7 @@ A minimal Chrome extension to control YouTube video playback speed. Choose from 
 
 ## Features
 
-- **15 speed presets** — 0.25×, 0.5×, 0.75×, 0.9×, 0.95×, 1×, 1.05×, 1.1×, 1.25×, 1.5×, 1.75×, 2×, 3×, 4× and 5×
+- **16 speed presets** — 0.25×, 0.5×, 0.75×, 1×, 1.25×, 1.5×, 1.75×, 2×, 2.25×, 2.5×, 2.75×, 3×, 3.5×, 4×, 4.5× and 5×
 - **Speed persists** across videos and YouTube SPA navigations
 - **Minimal UI** — clean dark interface, zero clutter
 
