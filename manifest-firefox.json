@@ -1,0 +1,40 @@
+{
+  "manifest_version": 2,
+  "name": "YouTube Fast",
+  "version": "1.0.0",
+  "description": "Control YouTube playback speed with precision — from 0.25x slow-motion to 5x fast-forward.",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "permissions": [
+    "storage",
+    "*://*.youtube.com/*"
+  ],
+  "browser_action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "YouTube Fast",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "scripts": ["background/background-firefox.js"]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "yt-speed-controller@example.com",
+      "strict_min_version": "109.0"
+    }
+  }
+}
