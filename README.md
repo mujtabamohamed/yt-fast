@@ -36,12 +36,6 @@ Firefox requires a separate manifest. Use the build script to generate it:
 
 3. This creates `dist/firefox/` with the correct Firefox manifest
 
-#### Temporary install (removed when browser closes)
-
-4. Open `about:debugging#/runtime/this-firefox`
-5. Click **Load Temporary Add-on…**
-6. Select `dist/firefox/manifest.json`
-
 #### Permanent install (unsigned)
 
 4. Open `about:config`
