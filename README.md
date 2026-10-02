@@ -1,6 +1,6 @@
 # YouTube Fast ⏩
 
-A minimal browser extension to control YouTube video playback speed. Choose from 15 speed presets — from 0.25× slow-motion to 5× fast-forward.
+A minimal browser extension to control YouTube video playback speed. Choose from 15 speed presets from 0.25× slow-motion to 5× fast-forward.
 
 ![YouTube Fast popup](icons/icon-128.png)
 
